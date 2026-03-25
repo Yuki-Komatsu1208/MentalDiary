@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+
+class DiamondSliderThumbShape extends SliderComponentShape {
+  final double thumbSize;
+
+  const DiamondSliderThumbShape({this.thumbSize = 12.0});
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return Size.fromRadius(thumbSize);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
+    final Canvas canvas = context.canvas;
+    final Paint paint = Paint()
+      ..color = sliderTheme.thumbColor ?? Colors.blue
+      ..style = PaintingStyle.fill;
+
+    final Path diamond = Path()
+      ..moveTo(center.dx, center.dy - thumbSize) // 上
+      ..lineTo(center.dx + thumbSize, center.dy) // 右
+      ..lineTo(center.dx, center.dy + thumbSize) // 下
+      ..lineTo(center.dx - thumbSize, center.dy) // 左
+      ..close();
+
+    canvas.drawPath(diamond, paint);
+  }
+}
