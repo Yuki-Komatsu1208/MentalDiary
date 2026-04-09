@@ -64,10 +64,10 @@ class DailyStatusCalendarDayCell extends StatelessWidget {
           if (status != null)
             Opacity(
               opacity: isOutside ? 0.35 : 1,
-              child: DailyStatusDonut(status: status!, size: 56),
+              child: DailyStatusDonut(status: status!, size: 30),
             )
           else
-            const SizedBox(height: 56),
+            const SizedBox(height: 30),
         ],
       ),
     );

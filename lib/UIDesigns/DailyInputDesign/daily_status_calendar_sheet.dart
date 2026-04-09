@@ -73,7 +73,7 @@ class _DailyStatusCalendarSheet extends State<DailyStatusCalendarSheet> {
                   firstDay: DateTime(2000),
                   lastDay: DateTime(2100),
                   focusedDay: _focusedDay,
-                  rowHeight: 128,
+                  rowHeight: 96,
                   selectedDayPredicate: (DateTime day) {
                     return isSameDay(_selectedDay, day);
                   },

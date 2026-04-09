@@ -1,4 +1,5 @@
 import 'package:mental_diary/Entities/daily_status.dart';
+import 'package:mental_diary/Entities/VO/daily_status_score.dart';
 import 'package:mental_diary/Helpers/save_helper.dart';
 import 'package:mental_diary/Helpers/load_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,13 +28,13 @@ void main() {
     final List<DailyStatus> entities = <DailyStatus>[
       DailyStatus(
         Date: DateTime.parse("2024-06-01"),
-        Mood: 5,
-        Interest: 4,
+        Mood: DailyStatusScore(DailyStatusParameter.mood, 5),
+        Interest: DailyStatusScore(DailyStatusParameter.interest, 4),
         Note: "Great day!",
       ),
       DailyStatus(
         Date: DateTime.parse("2024-06-02"),
-        Stressed: 4,
+        Stressed: DailyStatusScore(DailyStatusParameter.stressed, 4),
         Note: "Not so good.",
       ),
     ];
@@ -58,11 +59,11 @@ void main() {
     // Arrange
     final DailyStatus targetStatus = DailyStatus(
       Date: DateTime.parse("2024-06-03"),
-      Mood: 2,
-      Interest: 3,
-      Energy: 4,
-      SleepQuality: 5,
-      Stressed: 1,
+      Mood: DailyStatusScore(DailyStatusParameter.mood, 2),
+      Interest: DailyStatusScore(DailyStatusParameter.interest, 3),
+      Energy: DailyStatusScore(DailyStatusParameter.energy, 4),
+      SleepQuality: DailyStatusScore(DailyStatusParameter.sleepQuality, 5),
+      Stressed: DailyStatusScore(DailyStatusParameter.stressed, 1),
       Note: "Saved automatically",
     );
 
@@ -74,8 +75,8 @@ void main() {
 
     // Assert
     expect(loadedStatus.Date, DateTime.parse("2024-06-03"));
-    expect(loadedStatus.Mood, 2);
-    expect(loadedStatus.Interest, 3);
+    expect(loadedStatus.Mood.value, 2);
+    expect(loadedStatus.Interest.value, 3);
     expect(loadedStatus.Note, "Saved automatically");
   });
 }

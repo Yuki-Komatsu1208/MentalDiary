@@ -13,21 +13,24 @@ class DailyStatusDonut extends StatelessWidget {
   //ドーナツ描画用のリング情報一覧を返す
   List<_DonutRingData> _buildRings() {
     return <_DonutRingData>[
-      _DonutRingData(progress: status.Mood / 5, color: const Color(0xFFE3CF9C)),
       _DonutRingData(
-        progress: status.Interest / 5,
+        progress: status.Mood.value / 5,
+        color: const Color(0xFFE3CF9C),
+      ),
+      _DonutRingData(
+        progress: status.Interest.value / 5,
         color: const Color(0xFF6F9272),
       ),
       _DonutRingData(
-        progress: status.Energy / 5,
+        progress: status.Energy.value / 5,
         color: const Color(0xFFC7812F),
       ),
       _DonutRingData(
-        progress: status.SleepQuality / 5,
+        progress: status.SleepQuality.value / 5,
         color: const Color(0xFF5F78A6),
       ),
       _DonutRingData(
-        progress: status.Stressed / 5,
+        progress: status.Stressed.value / 5,
         color: const Color(0xFFA13F3F),
       ),
     ];
@@ -35,7 +38,7 @@ class DailyStatusDonut extends StatelessWidget {
 
   //各リングの表示サイズ一覧を返す
   List<double> _buildRingSizes() {
-    return <double>[size, size - 8, size - 16, size - 24, size - 30];
+    return <double>[size, size - 4, size - 12, size - 16, size -20];
   }
 
   @override

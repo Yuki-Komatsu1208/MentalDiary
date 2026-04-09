@@ -8,7 +8,7 @@ class StatusSlider extends StatelessWidget {
     required this.value,
     required this.onChanged,
     required this.label,
-    required this.valueLabels,
+    required this.currentValueLabel,
     required this.minHint,
     required this.maxHint,
   });
@@ -16,19 +16,9 @@ class StatusSlider extends StatelessWidget {
   final String label;
   final int value;
   final ValueChanged<int> onChanged;
-  final List<String> valueLabels;
+  final String currentValueLabel;
   final String minHint;
   final String maxHint;
-
-  //現在の値に対応する説明文を返す
-  String _buildValueLabel() {
-    final int currentIndex = value - 1;
-    if (currentIndex < 0 || currentIndex >= valueLabels.length) {
-      return value.toString();
-    }
-
-    return valueLabels[currentIndex];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +26,9 @@ class StatusSlider extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F6F1),
+        color: const Color(0xFFF8F3EA),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFF111111), width: 1),
+        border: Border.all(color: const Color(0xFF3B342D), width: 1),
       ),
       child: Column(
         children: <Widget>[
@@ -60,11 +50,11 @@ class StatusSlider extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF111111),
+                  color: const Color(0xFF171411),
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
-                  _buildValueLabel(),
+                  currentValueLabel,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 11,
@@ -80,11 +70,11 @@ class StatusSlider extends StatelessWidget {
             data: SliderTheme.of(context).copyWith(
               trackShape: const RectangularSliderTrackShape(),
               trackHeight: 3.2,
-              activeTrackColor: const Color(0xFF111111),
-              inactiveTrackColor: const Color(0xFFD4D0C6),
-              thumbColor: const Color(0xFF111111),
+              activeTrackColor: const Color(0xFF171411),
+              inactiveTrackColor: const Color(0xFFCFC2AE),
+              thumbColor: const Color(0xFF171411),
               overlayColor: const Color(0x14111111),
-              valueIndicatorColor: const Color(0xFF111111),
+              valueIndicatorColor: const Color(0xFF171411),
               valueIndicatorTextStyle: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
@@ -110,7 +100,7 @@ class StatusSlider extends StatelessWidget {
                 child: Text(
                   minHint,
                   style: const TextStyle(
-                    color: Color(0xFF6A6A6A),
+                    color: Color(0xFF665E55),
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                   ),
@@ -122,7 +112,7 @@ class StatusSlider extends StatelessWidget {
                   maxHint,
                   textAlign: TextAlign.right,
                   style: const TextStyle(
-                    color: Color(0xFF6A6A6A),
+                    color: Color(0xFF665E55),
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                   ),
