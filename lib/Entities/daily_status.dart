@@ -86,6 +86,22 @@ class DailyStatus {
             .round();
   }
 
+  ///総合スコアに対応するサマリ文言を返す
+  static String summaryLabelForScore(int score) {
+    switch (score) {
+      case 5:
+        return '高い集中と安定感がある期間でした';
+      case 4:
+        return '落ち着いたバランスの期間でした';
+      case 3:
+        return 'フラットな流れの期間でした';
+      case 2:
+        return '少し休息を優先したい期間でした';
+      default:
+        return 'ゆっくり整える雰囲気の期間でした';
+    }
+  }
+
   String get summaryLabel {
     switch (summaryScore) {
       case 5:

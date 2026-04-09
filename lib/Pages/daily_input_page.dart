@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './/Entities/daily_status.dart';
+import './/Entities/period_summary.dart';
 import './/Entities/VO/daily_status_score.dart';
 import '../Helpers/load_helper.dart';
 import '../Helpers/save_helper.dart';
@@ -8,6 +9,8 @@ import '../UIDesigns/DailyInputDesign/daily_input_hero_section.dart';
 import '../UIDesigns/DailyInputDesign/hide_on_scroll_header_layout.dart';
 import '../UIDesigns/DailyInputDesign/daily_input_section_card.dart';
 import '../UIDesigns/DailyInputDesign/daily_status_calendar_sheet.dart';
+import '../UIDesigns/DailyInputDesign/period_summary_range_sheet.dart';
+import '../UIDesigns/DailyInputDesign/period_summary_sheet.dart';
 import '../UIDesigns/SliderDesign/status_slider.dart';
 
 //日々の入力ページ
@@ -131,6 +134,75 @@ class _DailyInputPage extends State<DailyInputPage> {
     );
   }
 
+  //期間サマリの範囲指定シートを表示する
+  Future<DateTimeRange?> _showPeriodRangeModal() async {
+    final DateTimeRange initialRange = DateTimeRange(
+      start: DateUtils.dateOnly(dailyStatus.Date.subtract(const Duration(days: 6))),
+      end: DateUtils.dateOnly(dailyStatus.Date),
+    );
+
+    return showModalBottomSheet<DateTimeRange>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: PeriodSummaryRangeSheet(
+            initialRange: initialRange,
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2100),
+          ),
+        );
+      },
+    );
+  }
+
+  //期間サマリ結果のシートを表示する
+  Future<void> _showPeriodSummaryModal(PeriodSummary summary) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (BuildContext context) {
+        return FractionallySizedBox(
+          heightFactor: 0.92,
+          child: PeriodSummarySheet(summary: summary),
+        );
+      },
+    );
+  }
+
+  //期間指定から期間サマリ表示までを行う
+  Future<void> _showPeriodSummaryFlow() async {
+    final DateTimeRange? selectedRange = await _showPeriodRangeModal();
+    if (selectedRange == null) {
+      return;
+    }
+
+    final Map<DateTime, DailyStatus> statusMap =
+        await LoadHelper.loadDailyStatusMap();
+    if (!mounted) {
+      return;
+    }
+
+    final PeriodSummary summary = PeriodSummary.fromStatusMap(
+      statusMap: statusMap,
+      startDate: selectedRange.start,
+      endDate: selectedRange.end,
+    );
+
+    await _showPeriodSummaryModal(summary);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,6 +227,9 @@ class _DailyInputPage extends State<DailyInputPage> {
               summaryLabel: dailyStatus.summaryLabel,
               onCalendarPressed: () {
                 _showCalendarModal();
+              },
+              onPeriodSummaryPressed: () {
+                _showPeriodSummaryFlow();
               },
             ),
           ),

@@ -7,25 +7,51 @@ class DailyInputHeroSection extends StatelessWidget {
     required this.dateLabel,
     required this.summaryLabel,
     required this.onCalendarPressed,
+    required this.onPeriodSummaryPressed,
   });
 
   final String dateLabel;
   final String summaryLabel;
   final VoidCallback onCalendarPressed;
+  final VoidCallback onPeriodSummaryPressed;
 
-  //ヒーローカード内のカレンダーボタンUIを返す
-  Widget _buildCalendarButton() {
-    return IconButton(
-      style: IconButton.styleFrom(
+  //ヒーローカード内のアクションボタンUIを返す
+  Widget _buildActionButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    String? label,
+  }) {
+    final ButtonStyle style = IconButton.styleFrom(
+      backgroundColor: const Color(0xFFF6EDDE),
+      foregroundColor: const Color(0xFF14110E),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: const BorderSide(color: Color(0xFFA28F79), width: 1),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+    );
+
+    if (label == null) {
+      return IconButton(
+        style: style,
+        icon: Icon(icon),
+        onPressed: onPressed,
+      );
+    }
+
+    return TextButton.icon(
+      style: TextButton.styleFrom(
         backgroundColor: const Color(0xFFF6EDDE),
         foregroundColor: const Color(0xFF14110E),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),
           side: const BorderSide(color: Color(0xFFA28F79), width: 1),
         ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       ),
-      icon: const Icon(Icons.calendar_month),
-      onPressed: onCalendarPressed,
+      onPressed: onPressed,
+      icon: Icon(icon, size: 20),
+      label: Text(label),
     );
   }
 
@@ -66,7 +92,16 @@ class DailyInputHeroSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              _buildCalendarButton(),
+              _buildActionButton(
+                icon: Icons.insights_outlined,
+                label: '期間サマリ',
+                onPressed: onPeriodSummaryPressed,
+              ),
+              const SizedBox(width: 10),
+              _buildActionButton(
+                icon: Icons.calendar_month,
+                onPressed: onCalendarPressed,
+              ),
             ],
           ),
           const SizedBox(height: 18),

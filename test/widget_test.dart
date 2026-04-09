@@ -25,7 +25,7 @@ void main() {
     await tester.pumpWidget(const MyApp());
 
     // 起動直後に当日の入力画面が表示されることを確認
-    expect(find.text('コンディションを1~5で入力しましょう'), findsOneWidget);
+    expect(find.text('今日の状態を記録しましょう'), findsOneWidget);
     expect(
       find.byWidgetPredicate(
         (Widget widget) => _hasTextFragment(widget, '今日の状態を'),
@@ -33,5 +33,6 @@ void main() {
       findsOneWidget,
     );
     expect(find.byIcon(Icons.calendar_month), findsOneWidget);
+    expect(find.text('期間サマリ'), findsOneWidget);
   });
 }
