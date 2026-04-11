@@ -18,8 +18,13 @@ class HideOnScrollHeaderLayout extends StatefulWidget {
 
 class _HideOnScrollHeaderLayoutState extends State<HideOnScrollHeaderLayout> {
   bool _isHeaderVisible = true;
+  static const double _scrollDeltaThreshold = 2;
 
-  bool _handleScrollNotification(UserScrollNotification notification) {
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) {
+      return false;
+    }
+
     if (notification.metrics.pixels <= 0) {
       if (!_isHeaderVisible && mounted) {
         setState(() {
@@ -29,15 +34,32 @@ class _HideOnScrollHeaderLayoutState extends State<HideOnScrollHeaderLayout> {
       return false;
     }
 
-    if (notification.direction == ScrollDirection.reverse && _isHeaderVisible) {
-      setState(() {
-        _isHeaderVisible = false;
-      });
-    } else if (notification.direction == ScrollDirection.forward &&
-        !_isHeaderVisible) {
-      setState(() {
-        _isHeaderVisible = true;
-      });
+    if (notification is ScrollUpdateNotification) {
+      final double delta = notification.scrollDelta ?? 0;
+      if (delta > _scrollDeltaThreshold && _isHeaderVisible) {
+        setState(() {
+          _isHeaderVisible = false;
+        });
+      } else if (delta < -_scrollDeltaThreshold && !_isHeaderVisible) {
+        setState(() {
+          _isHeaderVisible = true;
+        });
+      }
+      return false;
+    }
+
+    if (notification is UserScrollNotification) {
+      if (notification.direction == ScrollDirection.reverse &&
+          _isHeaderVisible) {
+        setState(() {
+          _isHeaderVisible = false;
+        });
+      } else if (notification.direction == ScrollDirection.forward &&
+          !_isHeaderVisible) {
+        setState(() {
+          _isHeaderVisible = true;
+        });
+      }
     }
 
     return false;
@@ -52,25 +74,22 @@ class _HideOnScrollHeaderLayoutState extends State<HideOnScrollHeaderLayout> {
             tween: Tween<double>(begin: 1, end: _isHeaderVisible ? 1 : 0),
             duration: const Duration(milliseconds: 220),
             curve: Curves.easeOutCubic,
-            builder: (
-              BuildContext context,
-              double visibilityFactor,
-              Widget? child,
-            ) {
-              return ClipRect(
-                child: Align(
-                  heightFactor: visibilityFactor,
-                  child: Opacity(
-                    opacity: visibilityFactor.clamp(0.0, 1.0),
-                    child: child,
-                  ),
-                ),
-              );
-            },
+            builder:
+                (BuildContext context, double visibilityFactor, Widget? child) {
+                  return ClipRect(
+                    child: Align(
+                      heightFactor: visibilityFactor,
+                      child: Opacity(
+                        opacity: visibilityFactor.clamp(0.0, 1.0),
+                        child: child,
+                      ),
+                    ),
+                  );
+                },
             child: widget.header,
           ),
           Expanded(
-            child: NotificationListener<UserScrollNotification>(
+            child: NotificationListener<ScrollNotification>(
               onNotification: _handleScrollNotification,
               child: widget.body,
             ),
