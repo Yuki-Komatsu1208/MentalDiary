@@ -22,14 +22,15 @@ class PeriodSummaryRangeSheet extends StatefulWidget {
 
 //期間サマリの範囲指定シートの状態を管理するクラス
 class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
-  late DateTime _startDate;
-  late DateTime _endDate;
+  late DateTimeRange _selectedRange;
 
   @override
   void initState() {
     super.initState();
-    _startDate = DateUtils.dateOnly(widget.initialRange.start);
-    _endDate = DateUtils.dateOnly(widget.initialRange.end);
+    _selectedRange = DateTimeRange(
+      start: DateUtils.dateOnly(widget.initialRange.start),
+      end: DateUtils.dateOnly(widget.initialRange.end),
+    );
   }
 
   ///表示用の日付ラベルを返す
@@ -37,20 +38,17 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
     return '${date.year}年${date.month}月${date.day}日';
   }
 
-  ///開始日または終了日を選択する
-  Future<void> _selectDate({required bool isStartDate}) async {
-    final DateTime initialDate = isStartDate ? _startDate : _endDate;
-    final DateTime firstDate = isStartDate ? widget.firstDate : _startDate;
-    final DateTime lastDate = isStartDate ? _endDate : widget.lastDate;
-
-    final DateTime? selectedDate = await showDatePicker(
+  ///開始日と終了日をまとめて選択する
+  Future<void> _selectDateRange() async {
+    final DateTimeRange? selectedRange = await showDateRangePicker(
       context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      helpText: isStartDate ? '開始日を選択' : '終了日を選択',
+      initialDateRange: _selectedRange,
+      firstDate: widget.firstDate,
+      lastDate: widget.lastDate,
+      helpText: '集計する期間を選択',
       cancelText: '閉じる',
       confirmText: '決定',
+      saveText: '決定',
       builder: (BuildContext context, Widget? child) {
         final ThemeData theme = Theme.of(context);
         return Theme(
@@ -70,25 +68,20 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
       },
     );
 
-    if (selectedDate == null || !mounted) {
+    if (selectedRange == null || !mounted) {
       return;
     }
 
     setState(() {
-      if (isStartDate) {
-        _startDate = DateUtils.dateOnly(selectedDate);
-      } else {
-        _endDate = DateUtils.dateOnly(selectedDate);
-      }
+      _selectedRange = DateTimeRange(
+        start: DateUtils.dateOnly(selectedRange.start),
+        end: DateUtils.dateOnly(selectedRange.end),
+      );
     });
   }
 
-  ///日付選択カードUIを返す
-  Widget _buildDateCard({
-    required String title,
-    required DateTime date,
-    required VoidCallback onPressed,
-  }) {
+  ///期間選択カードUIを返す
+  Widget _buildRangeCard() {
     final TextTheme textTheme = Theme.of(context).textTheme;
     return Container(
       width: double.infinity,
@@ -105,14 +98,14 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  title,
+                  '選択中の期間',
                   style: textTheme.titleMedium?.copyWith(
                     color: const Color(0xFF6A5F54),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  _buildDateLabel(date),
+                  '${_buildDateLabel(_selectedRange.start)} 〜\n${_buildDateLabel(_selectedRange.end)}',
                   style: textTheme.titleLarge?.copyWith(
                     color: const Color(0xFF171411),
                   ),
@@ -121,9 +114,9 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
             ),
           ),
           TextButton.icon(
-            onPressed: onPressed,
-            icon: const Icon(Icons.event),
-            label: const Text('変更'),
+            onPressed: _selectDateRange,
+            icon: const Icon(Icons.date_range),
+            label: const Text('選択'),
             style: TextButton.styleFrom(
               foregroundColor: const Color(0xFF171411),
             ),
@@ -147,27 +140,13 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
             Text('期間サマリ', style: textTheme.headlineMedium),
             const SizedBox(height: 10),
             Text(
-              '集計したい開始日と終了日を選んでください。',
+              '一つのカレンダーで開始日と終了日を選んでください。',
               style: textTheme.bodyMedium?.copyWith(
                 color: const Color(0xFF5C544C),
               ),
             ),
             const SizedBox(height: 20),
-            _buildDateCard(
-              title: '開始日',
-              date: _startDate,
-              onPressed: () {
-                _selectDate(isStartDate: true);
-              },
-            ),
-            const SizedBox(height: 12),
-            _buildDateCard(
-              title: '終了日',
-              date: _endDate,
-              onPressed: () {
-                _selectDate(isStartDate: false);
-              },
-            ),
+            _buildRangeCard(),
             const SizedBox(height: 14),
             Container(
               width: double.infinity,
@@ -177,7 +156,10 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
                 borderRadius: BorderRadius.circular(24),
               ),
               child: Text(
-                PeriodSummary.formatDateRange(_startDate, _endDate),
+                PeriodSummary.formatDateRange(
+                  _selectedRange.start,
+                  _selectedRange.end,
+                ),
                 style: textTheme.bodyLarge?.copyWith(
                   color: const Color(0xFFFAF3E7),
                   fontWeight: FontWeight.w700,
@@ -189,9 +171,7 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: () {
-                  Navigator.of(context).pop(
-                    DateTimeRange(start: _startDate, end: _endDate),
-                  );
+                  Navigator.of(context).pop(_selectedRange);
                 },
                 style: FilledButton.styleFrom(
                   backgroundColor: const Color(0xFF171411),
