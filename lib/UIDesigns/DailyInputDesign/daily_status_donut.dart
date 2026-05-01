@@ -38,7 +38,7 @@ class DailyStatusDonut extends StatelessWidget {
 
   //各リングの表示サイズ一覧を返す
   List<double> _buildRingSizes() {
-    return <double>[size, size - 4, size - 12, size - 16, size -20];
+    return <double>[size, size - 4, size - 12, size - 16, size - 20];
   }
 
   @override

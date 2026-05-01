@@ -78,12 +78,12 @@ class DailyStatus {
   int get summaryScore {
     final int convertedStressScore = 6 - Stressed.value;
     return ((Mood.value +
-                    Interest.value +
-                    Energy.value +
-                    SleepQuality.value +
-                    convertedStressScore) /
-                5)
-            .round();
+                Interest.value +
+                Energy.value +
+                SleepQuality.value +
+                convertedStressScore) /
+            5)
+        .round();
   }
 
   ///総合スコアに対応するサマリ文言を返す

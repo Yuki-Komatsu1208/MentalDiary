@@ -30,19 +30,20 @@ class PeriodSummary {
       endDate.day,
     );
 
-    final List<DailyStatus> filteredStatuses = statusMap.entries
-        .where((MapEntry<DateTime, DailyStatus> entry) {
-          final DateTime date = DateTime(
-            entry.key.year,
-            entry.key.month,
-            entry.key.day,
-          );
-          return !date.isBefore(normalizedStartDate) &&
-              !date.isAfter(normalizedEndDate);
-        })
-        .map((MapEntry<DateTime, DailyStatus> entry) => entry.value)
-        .toList()
-      ..sort((DailyStatus a, DailyStatus b) => a.Date.compareTo(b.Date));
+    final List<DailyStatus> filteredStatuses =
+        statusMap.entries
+            .where((MapEntry<DateTime, DailyStatus> entry) {
+              final DateTime date = DateTime(
+                entry.key.year,
+                entry.key.month,
+                entry.key.day,
+              );
+              return !date.isBefore(normalizedStartDate) &&
+                  !date.isAfter(normalizedEndDate);
+            })
+            .map((MapEntry<DateTime, DailyStatus> entry) => entry.value)
+            .toList()
+          ..sort((DailyStatus a, DailyStatus b) => a.Date.compareTo(b.Date));
 
     return PeriodSummary(
       startDate: normalizedStartDate,
@@ -91,7 +92,8 @@ class PeriodSummary {
 
   ///期間サマリの自然言語を返す
   String get naturalLanguageSummary {
-    final String rangeLabel = '${_formatDate(startDate)}〜${_formatDate(endDate)}';
+    final String rangeLabel =
+        '${_formatDate(startDate)}〜${_formatDate(endDate)}';
     if (!hasEntries) {
       return '$rangeLabelは記録がまだありませんでした。';
     }

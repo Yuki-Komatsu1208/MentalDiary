@@ -137,7 +137,9 @@ class _DailyInputPage extends State<DailyInputPage> {
   //期間サマリの範囲指定シートを表示する
   Future<DateTimeRange?> _showPeriodRangeModal() async {
     final DateTimeRange initialRange = DateTimeRange(
-      start: DateUtils.dateOnly(dailyStatus.Date.subtract(const Duration(days: 6))),
+      start: DateUtils.dateOnly(
+        dailyStatus.Date.subtract(const Duration(days: 6)),
+      ),
       end: DateUtils.dateOnly(dailyStatus.Date),
     );
 
@@ -215,9 +217,13 @@ class _DailyInputPage extends State<DailyInputPage> {
         child: HideOnScrollHeaderLayout(
           header: Container(
             width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+            padding: const EdgeInsets.fromLTRB(18, 16, 18, 14),
             decoration: const BoxDecoration(
-              color: Color(0xFF12100E),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: <Color>[Color(0xFF151210), Color(0xFF12100E)],
+              ),
               border: Border(
                 bottom: BorderSide(color: Color(0xFF4A4036), width: 1),
               ),
