@@ -92,7 +92,7 @@ class PeriodSummarySheet extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: <Widget>[
-                  Text('自然言語サマリ', style: textTheme.titleLarge),
+                  Text('サマリ', style: textTheme.titleLarge),
                   const SizedBox(height: 10),
                   Container(
                     width: double.infinity,
@@ -122,7 +122,7 @@ class PeriodSummarySheet extends StatelessWidget {
                   }),
                   const SizedBox(height: 14),
                   Text(
-                    '${PeriodSummary.formatDateRange(summary.startDate, summary.endDate)}のNOTE',
+                    '${PeriodSummary.formatDateRange(summary.startDate, summary.endDate)}のメモ',
                     style: textTheme.titleLarge,
                   ),
                   const SizedBox(height: 10),
@@ -140,7 +140,7 @@ class PeriodSummarySheet extends StatelessWidget {
                       ),
                       child: Text(
                         summary.hasEntries
-                            ? 'この期間のNOTEはありません。'
+                            ? 'この期間のメモはありません。'
                             : 'この期間の記録はありません。',
                         style: textTheme.bodyLarge?.copyWith(
                           color: const Color(0xFF5C544C),

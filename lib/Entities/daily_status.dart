@@ -94,11 +94,11 @@ class DailyStatus {
       case 4:
         return '落ち着いたバランスの期間でした';
       case 3:
-        return 'フラットな流れの期間でした';
+        return 'フラットな期間でした';
       case 2:
-        return '少し休息を優先したい期間でした';
+        return '少し休息を優先したいです';
       default:
-        return 'ゆっくり整える雰囲気の期間でした';
+        return 'ゆっくり整える必要があるでしょう';
     }
   }
 
@@ -113,7 +113,7 @@ class DailyStatus {
       case 2:
         return '少し休息を優先したい状態です';
       default:
-        return 'ゆっくり整える日です';
+        return 'ゆっくり整える必要があります';
     }
   }
 

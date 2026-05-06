@@ -202,7 +202,7 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
             Text('期間サマリ', style: textTheme.headlineMedium),
             const SizedBox(height: 10),
             Text(
-              '期間表示を押して開始日と終了日を選び、下のボタンで集計します。',
+              '期間表示を押して開始日と終了日を選んでください',
               style: textTheme.bodyMedium?.copyWith(
                 color: const Color(0xFF5C544C),
               ),
@@ -353,7 +353,7 @@ class _PeriodSummaryRangeSheetState extends State<PeriodSummaryRangeSheet> {
                   foregroundColor: const Color(0xFFF8F3EA),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text('サマリ生成'),
+                child: const Text('集計'),
               ),
             ),
           ],
