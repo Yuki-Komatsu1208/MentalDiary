@@ -79,4 +79,27 @@ void main() {
     expect(loadedStatus.Interest.value, 3);
     expect(loadedStatus.Note, "Saved automatically");
   });
+
+  test('特殊文字を含むメモをJSONへ保存して読み込める', () async {
+    // Arrange
+    const String note = '\'single\' "double" {json} [array]\nnext line';
+    final DailyStatus targetStatus = DailyStatus(
+      Date: DateTime.parse("2024-06-04"),
+      Note: note,
+    );
+
+    // Act
+    await SaveHelper.saveSingleStatus(targetStatus);
+    final DailyStatus loadedStatus = await LoadHelper.loadStatusByDate(
+      DateTime.parse("2024-06-04"),
+    );
+    final Map<String, dynamic> loadedJson = await LoadHelper.loadLocalJson();
+
+    // Assert
+    expect(loadedStatus.Note, note);
+    expect(
+      loadedJson[DateTime.parse("2024-06-04").toIso8601String()]['Note'],
+      note,
+    );
+  });
 }
